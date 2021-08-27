@@ -2,25 +2,38 @@ const express = require('express')
 const app = express()
 const port = 3000
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+const path = require('path')
+path.join(__dirname, '/fish.db')
 
-app.get('/adc', (req, res) => {
-    res.send('swag')
-    console.log('high')
-  })
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '/index.html'))
+})
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 
 ////////////////////////////////
-const path = require('path')
-path.join(__dirname, '/fish.db')
 
-var sqlite3 = require('sqlite3').verbose()
-var db = new sqlite3.Database(path.join(__dirname, '/fish.db'))
+
+
+
+app.use(express.json()) // for parsing application/json
+app.use(express.urlencoded({ extended: true })) 
+
+app.post('/popo', (req, res) => {
+  // res.set('Access-Control-Allow-Origin', '*');
+  // res.setHeader('Access-Control-Allow-Origin', '*')
+  res.send('swag')
+  console.log('server log: ', req.body)
+  // *** update to the database
+  var sqlite3 = require('sqlite3').verbose()
+  var db = new sqlite3.Database(path.join(__dirname, '/fish.db'))
+  db.serialize(function () {
+    db.run(`INSERT INTO FishLocal (Specie, Location) VALUES ('${req.body['name']}', '${req.body['location']}');`)
+  })
+  db.close()
+})
 
 // db.serialize(function () {
 //   db.run('CREATE TABLE lorem (info TEXT)')
@@ -38,4 +51,4 @@ var db = new sqlite3.Database(path.join(__dirname, '/fish.db'))
 // })
 
 
-db.close()
+// db.close()
