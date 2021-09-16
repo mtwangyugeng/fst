@@ -3,11 +3,11 @@
 <body>
     <textarea id = 'name' placeholder = 'Name'></textarea>
     <textarea id = 'location' placeholder = 'Location'></textarea>
-    <!-- <button id='sr'
-        onclick = "fetch('http://localhost:3000/adc')
+    <button id='sr'
+        onclick = "fetch('http://localhost:3000/alldata')
                     .then((v)=>v.text())
-                    .then(data => document.getElementById('name').innerHTML = data )"    
-    >send request</button> -->
+                    .then(data => document.getElementById('stat').innerHTML = data )"    
+    >request data</button>
     <div id="stat"></div>
     <button id='sr2'
         onclick = "fetch('http://localhost:3000/popo', {
