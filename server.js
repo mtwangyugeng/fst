@@ -48,3 +48,16 @@ app.post('/popo', (req, res) => {
   })
   db.close()
 })
+
+app.post('/fishinfo', (req, res) => {
+  console.log('reeeeeeeeeeeeeeeeeeeeeeeeeeeeee', req.body['Specie'])
+  var db = new sqlite3.Database(path.join(__dirname, '/fish.db'))
+  db.serialize(function () {
+    db.get(`SELECT * FROM AllFishes WHERE Specie = ${req.body['Specie']};`,function (err, row) {
+      console.log('reeeeeeeeeeeeeeeeeeeeeeeeeeeeee', row)
+      res.send(row)
+    }
+    )
+  })
+  db.close()
+})
