@@ -7,7 +7,7 @@ export default class LHMapPresentation extends React.Component{
 
     render() {
         return (
-        <MapContainer center={this.props.center} zoom={9} style={{ width: '100%', height: '900px'}} scrollWheelZoom={false}>
+        <MapContainer center={this.props.center} zoom={9} style={{ width: '100%', height: '80%'}} scrollWheelZoom={true} doubleClickZoom={false}>
             <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -21,7 +21,7 @@ export default class LHMapPresentation extends React.Component{
                         return(
                             <Marker position={[v['Lat'], v['Lng']]}>
                                 <Popup>
-                                <LHMapPopup v = {v} />
+                                    <LHMapPopup v = {v} />
                                 </Popup>
                             </Marker>)
                 }

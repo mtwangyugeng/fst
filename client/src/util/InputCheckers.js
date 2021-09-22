@@ -29,7 +29,7 @@ export function isNumeric(str, t) {
         if(!isNaN(temp))
             return temp
         else
-            throw t + ': User input is just white spaces.'
+            throw t + ': No input is or the input is just white spaces.'
     }
     throw t + ': User input is not a number.'
   }
