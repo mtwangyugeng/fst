@@ -1,0 +1,13 @@
+.lhMapPopup-main{
+    background-color: rgb(200, 200, 243);
+    width: 25vw;
+    height: 20vw;
+    overflow: auto;
+}
+
+.lhMapPopup-fishpic{
+    margin-top: 5%;
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+}

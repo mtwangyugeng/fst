@@ -1,6 +1,8 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
+import LHMapPopup from './lhmappopup/LHMapPopup'
+
 export default class LHMapPresentation extends React.Component{
 
     render() {
@@ -19,7 +21,7 @@ export default class LHMapPresentation extends React.Component{
                         return(
                             <Marker position={[v['Lat'], v['Lng']]}>
                                 <Popup>
-                                {''+ v['Lat'] + ' ' + v['Lng']+ ' ' + v['Specie']+ ' ' +  v['Size']} <br /> Easily customizable.
+                                <LHMapPopup v = {v} />
                                 </Popup>
                             </Marker>)
                 }

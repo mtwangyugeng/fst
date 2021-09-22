@@ -21,9 +21,9 @@ app.get('/alldata', (req, res) => {
   var db = new sqlite3.Database(path.join(__dirname, '/fish.db'))
   var finale = ''
   db.each('SELECT * FROM FishLocal;', function (err, row) {
-    console.log('rowwww', typeof row ,"ed")
+    // console.log('rowwww', typeof row ,"ed")
     finale += JSON.stringify(row) + '|'
-    console.log(finale)
+    // console.log(finale)
   }, function () {
     res.send(finale)
   }

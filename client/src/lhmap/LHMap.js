@@ -12,6 +12,9 @@ export default class LHMap extends React.Component{
         p_lat: '',
         p_lng: ''
       }
+    
+    specie_cache = {}
+
     async refreshAll(){
         console.log('refreshing')
         await fetch('http://localhost:3000/alldata').then((v) => {
@@ -45,10 +48,6 @@ export default class LHMap extends React.Component{
         return  finale
       }
 
-    async componentDidMount() {
-        this.refreshAll()
-    }
-
     postNewFishLocal=()=>{
         fetch('http://localhost:3000/popo', {
                 method: 'POST',
@@ -73,10 +72,17 @@ export default class LHMap extends React.Component{
             ic.isLat(this.state.p_lat)
             ic.isLng(this.state.p_lng)
             this.postNewFishLocal()
-            this.refreshAll()
+            // this.refreshAll()
         }catch(e){
-            this.setState({mystate: e})
+            if(typeof e === 'string')
+                this.setState({mystate: e})
+            else
+                console.log(e)
         }
+    }
+
+    async componentDidMount() {
+        this.refreshAll()
     }
 
     render() {

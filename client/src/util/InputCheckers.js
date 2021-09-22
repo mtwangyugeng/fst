@@ -1,6 +1,6 @@
 export function isSpecie(imp){
     const temp = isNumeric(imp, 'Specie')
-    if (!temp.isInteger() || temp < 0)
+    if (!Number.isInteger(temp) || temp < 0)
         throw 'Specie must be a non-negative integer'
 }
 
