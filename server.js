@@ -1,6 +1,29 @@
 // express init
 const express = require('express')
 const app = express()
+const http = require('http').Server(app);
+const io = require('socket.io')(http, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('new fishlocal', (msg) => {
+      console.log('message: ' + msg);
+      io.emit('new fishlocal', msg);
+    });
+  socket.on('disconnect', () => {
+      console.log('user disconnected');
+    });
+});
+
+http.listen(4001, () => {
+console.log('listening on *:4001');
+});
+
+
 const port = 4000
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`)
@@ -18,6 +41,7 @@ var sqlite3 = require('sqlite3').verbose()
 
 // FishLocal : {Specie, Size, Lat, lng}
 app.get('/alldata', (req, res) => {
+  console.log('alldata')
   var db = new sqlite3.Database(path.join(__dirname, '/fish.db'))
   var finale = ''
   db.each('SELECT * FROM FishLocal;', function (err, row) {
@@ -39,7 +63,7 @@ app.use(express.urlencoded({ extended: true }))
 app.post('/popo', (req, res) => {
   // res.set('Access-Control-Allow-Origin', '*');
   // res.setHeader('Access-Control-Allow-Origin', '*')
-  res.send('swag')
+  
   console.log('server log: ', req.body)
   // *** update to the database
   var db = new sqlite3.Database(path.join(__dirname, '/fish.db'))
@@ -47,6 +71,7 @@ app.post('/popo', (req, res) => {
     db.run(`INSERT INTO FishLocal (Specie, Size, Lat, Lng) VALUES ('${req.body['Specie']}', '${req.body['Size']}', '${req.body['Lat']}', '${req.body['Lng']}');`)
   })
   db.close()
+  res.send('swag')
 })
 
 app.post('/fishinfo', (req, res) => {

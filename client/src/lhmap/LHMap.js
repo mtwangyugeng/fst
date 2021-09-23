@@ -4,7 +4,12 @@ import * as ic from'../util/InputCheckers'
 
 import './LHMap.css'
 
+import socketIOClient from "socket.io-client";
+
 export default class LHMap extends React.Component{
+    ENDPOINT = "http://127.0.0.1:4001";
+    socket = socketIOClient(this.ENDPOINT);
+
     state = {
         mystate: 'Waiting for the Server',
         incidents: [],
@@ -68,7 +73,7 @@ export default class LHMap extends React.Component{
                 })
             })
                         .then((v)=>v.text())
-                        .then(data => {})
+                        .then(data => this.socket.emit('new fishlocal', 'need refresh'))
       }
 
     sendData = () => {
@@ -84,7 +89,7 @@ export default class LHMap extends React.Component{
                 p_lat: '',
                 p_lng: ''
             })
-            this.refreshAll()
+            // this.refreshAll()
 
         }catch(e){
             if(typeof e === 'string')
@@ -96,6 +101,9 @@ export default class LHMap extends React.Component{
 
     async componentDidMount() {
         this.refreshAll()
+        this.socket.on('new fishlocal', (msg) => {
+            this.refreshAll()
+        });
     }
 
     render() {
