@@ -43,9 +43,9 @@ export default class LHMapPopup extends React.Component{
     render() {
         return (
             <div className="lhMapPopup-main">
-                <Tooltip direction="right" offset={[0, 20]} opacity={1} permanent>
+                {/* <Tooltip direction="right" offset={[0, 20]} opacity={1} permanent>
                     [{this.props.v['Lat']}, {this.props.v['Lng']}]
-                </Tooltip>
+                </Tooltip> */}
                 <div>Fish ID: {this.props.v['Specie']} </div>
                 <div>Size: {this.props.v['Size']} cm</div>
                 <div>[Lat, lng]: [{this.props.v['Lat']}, {this.props.v['Lng']}] </div>

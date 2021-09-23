@@ -89,8 +89,6 @@ export default class LHMap extends React.Component{
                 p_lat: '',
                 p_lng: ''
             })
-            // this.refreshAll()
-
         }catch(e){
             if(typeof e === 'string')
                 this.setState({mystate: e})
@@ -116,9 +114,15 @@ export default class LHMap extends React.Component{
                 <textarea onChange = {(e)=>this.setState({p_lat: e.target.value})} value = {this.state.p_lat} placeholder = 'Lat'></textarea>
                 <textarea onChange = {(e)=>this.setState({p_lng: e.target.value})} value = {this.state.p_lng} placeholder = 'Lng'></textarea>
                 <button id='pr' onClick = {this.sendData}>send data</button>
-                <LHMapPresentation incidents = {this.state.incidents} center = {this.props.center}/>
+                <LHMapPresentation incidents = {this.state.incidents} center = {this.props.center} setLatLng = {this.setLatLng}/>
             </div>
         )
     }
 
+    setLatLng = (lat,lng) =>{
+        this.setState({
+            p_lat: lat,
+            p_lng: lng
+        })
+    }
 }

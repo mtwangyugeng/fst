@@ -1,6 +1,9 @@
 // express init
 const express = require('express')
 const app = express()
+
+
+//socket.io essencials
 const http = require('http').Server(app);
 const io = require('socket.io')(http, {
   cors: {
@@ -10,20 +13,23 @@ const io = require('socket.io')(http, {
 });
 io.on('connection', (socket) => {
   console.log('a user connected');
+  // one of user tells you a new fishlocal is added
   socket.on('new fishlocal', (msg) => {
+      //TODO: msg contains user id
       console.log('message: ' + msg);
+      //tell all users a new fishlocal is added
       io.emit('new fishlocal', msg);
     });
   socket.on('disconnect', () => {
       console.log('user disconnected');
     });
 });
-
+// port for socket connection
 http.listen(4001, () => {
-console.log('listening on *:4001');
+  console.log('listening on *:4001');
 });
 
-
+// proxy server
 const port = 4000
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`)
@@ -37,7 +43,6 @@ app.listen(port, () => {
 const path = require('path')
 // using SQLite3 library
 var sqlite3 = require('sqlite3').verbose()
-
 
 // FishLocal : {Specie, Size, Lat, lng}
 app.get('/alldata', (req, res) => {
@@ -71,15 +76,13 @@ app.post('/popo', (req, res) => {
     db.run(`INSERT INTO FishLocal (Specie, Size, Lat, Lng) VALUES ('${req.body['Specie']}', '${req.body['Size']}', '${req.body['Lat']}', '${req.body['Lng']}');`)
   })
   db.close()
-  res.send('swag')
+  res.send('Insertion of fishlocal completed successfully.')
 })
 
 app.post('/fishinfo', (req, res) => {
-  console.log('reeeeeeeeeeeeeeeeeeeeeeeeeeeeee', req.body['Specie'])
   var db = new sqlite3.Database(path.join(__dirname, '/fish.db'))
   db.serialize(function () {
     db.get(`SELECT * FROM AllFishes WHERE Specie = ${req.body['Specie']};`,function (err, row) {
-      console.log('reeeeeeeeeeeeeeeeeeeeeeeeeeeeee', row)
       res.send(row)
     }
     )
