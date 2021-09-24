@@ -13,6 +13,7 @@ const io = require('socket.io')(http, {
 });
 io.on('connection', (socket) => {
   console.log('a user connected');
+  io.emit('new fishlocal', 'first');
   // one of user tells you a new fishlocal is added
   socket.on('new fishlocal', (msg) => {
       //TODO: msg contains user id
