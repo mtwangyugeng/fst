@@ -19,16 +19,17 @@ export default class LHMapPresentation extends React.Component{
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <MyComponent setTLatLng = {this.setTLatLng} setLatLng = {this.props.setLatLng}/>
-            {this.props.incidents.map(incident => {
+            {Object.keys(this.props.locations).map(id => {
                 // console.log('!!!!');
-                if(incident !== ''){
+                if(id !== ''){
                     // console.log( incident);
-                    const v = JSON.parse(incident)
+                    const v = this.props.locations[id]
                     //TODO
                         return(
                             <Marker position={[v['Lat'], v['Lng']]}>
                                 <Popup>
-                                    <LHMapPopup v = {v} fishinfo_cache = {this.props.fishinfo_cache} requestFishInfo_initial = {this.props.requestFishInfo_initial}/>
+                                    {/* <LHMapPopup v = {v} fishinfo_cache = {this.props.fishinfo_cache} requestFishInfo_initial = {this.props.requestFishInfo_initial}/> */}
+                                    <LHMapPopup locationfishlocal = {this.props.locationfishlocal[v['ID']]}/>
                                 </Popup>
                             </Marker>)
                 }

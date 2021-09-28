@@ -12,21 +12,26 @@ export default class LHMap extends React.Component{
 
     state = {
         mystate: 'Waiting for the Server',
-        incidents: [],
+        locations: [],
+        fishlocals: [],
 
-        p_specie: '',
-        p_size: '',
+        p_name: '',
         p_lat: '',
         p_lng: '',
+        p_description: '',
 
-        fishinfo_cache: {}
+        fishinfo_cache: {},
+        locations_cache:{},
+
+        locationfishlocal:{}
       }
 
       
 
-    async refreshAll(){
-        console.log('refreshing')
-        await fetch('http://localhost:3000/alldata').then((v) => {
+    async requestAllLocations(){
+        console.log('getting localtion Data')
+        
+        await fetch('http://localhost:3000/AllLocations').then((v) => {
             if(v.ok){
                 return v
             }else {
@@ -34,10 +39,58 @@ export default class LHMap extends React.Component{
             }
             }).then((v)=>v.text())
             .then(data => {
+                var temp = data.split('|')
+                /*usage
+                locations_cache[id] => html of location data
+                locations[id] => raw data 
+                locationfishlocal[id] => list of fishlocals
+                */
+               var tlocation = {}
+                temp.forEach(sage => {
+                    if(sage !== ''){
+                        const t = JSON.parse(sage)
+                        tlocation[t['ID']] = t
+                    }
+                });
                 this.setState({
-                    incidents: data.split('|'),
-                    mystate: 'Connected to server'
-                })})
+                    locations: tlocation,
+                    mystate: 'Loaded table AllLocations'
+                })
+            })
+            .catch((error) => {
+                this.setState({mystate: 'No response from server'})
+                console.log(error)
+        });   
+    }
+
+    async requestAllFishlocals(){
+        await fetch('http://localhost:3000/FishLocal').then((v) => {
+            if(v.ok){
+                return v
+            }else {
+                throw new Error('no response from server');
+            }
+            }).then((v)=>v.text())
+            .then(data => {
+                const temp = data.split('|')
+                var tlocationfishlocal = {}
+                temp.forEach(sage => {
+                    if(sage !== ''){
+                        console.log('sage again!!',sage)
+                        const t = JSON.parse(sage)
+                        if(tlocationfishlocal[t['LocationID']])
+                            tlocationfishlocal[t['LocationID']].append(t)
+                        else
+                            tlocationfishlocal[t['LocationID']] = [t]
+                    }
+                });
+                console.log('tlocationfishlocal', tlocationfishlocal)
+                this.setState({
+                    fishlocals: data.split('|'),
+                    locationfishlocal: tlocationfishlocal,
+                    mystate: 'Loaded table FishLocal'
+                })
+            })
             .catch((error) => {
                 this.setState({mystate: 'No response from server'})
                 console.log(error)
@@ -94,18 +147,34 @@ export default class LHMap extends React.Component{
             .then(data => this.socket.emit('new fishlocal', 'need refresh'))
       }
 
-    sendData = () => {
+    async postNewLocation(){
+        console.log('postNewLocation: good')
+        await fetch('http://localhost:3000/postNewLocation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    'Name': this.state.p_name,
+                    'Lat': this.state.p_lat,
+                    'Lng': this.state.p_lng,
+                    'Description': this.state.p_description
+                })
+            })
+            .then((v)=>v.text())
+            .then(data => this.socket.emit('new location', 'need refresh'))
+    }
+
+    sendLocation = () => {
         try{
-            ic.isSpecie(this.state.p_specie)
-            ic.isSize(this.state.p_size)
             ic.isLat(this.state.p_lat)
             ic.isLng(this.state.p_lng)
-            this.postNewFishLocal()
+            this.postNewLocation()
             this.setState({
-                p_specie: '',
-                p_size: '',
+                p_name: '',
                 p_lat: '',
-                p_lng: ''
+                p_lng: '',
+                p_description: ''
             })
         }catch(e){
             if(typeof e === 'string')
@@ -116,9 +185,22 @@ export default class LHMap extends React.Component{
     }
 
     async componentDidMount() {
-        this.socket.on('new fishlocal', (msg) => {
-            this.refreshAll()
+        //get all data from server as it mounts
+        this.socket.on('server online', (msg) => {
+            console.log(msg)
+            this.requestAllLocations()
+            this.requestAllFishlocals()
         });
+
+        this.socket.on('new location', (msg) => {
+            console.log(msg)
+            this.requestAllLocations()
+        });
+
+        // this.socket.on('new fishlocal', (msg) => {
+        //     console.log(msg)
+        //     this.refreshAll()
+        // });
     }
 
     render() {
@@ -126,12 +208,14 @@ export default class LHMap extends React.Component{
             <div className="LHMap-main">
                 {this.state.mystate}
                 <br/>
-                <textarea onChange = {(e)=>this.setState({p_specie: e.target.value})}  value = {this.state.p_specie} placeholder = 'Specie ID'></textarea>
-                <textarea onChange = {(e)=>this.setState({p_size: e.target.value})} value = {this.state.p_size} placeholder = 'Size'></textarea>
-                <textarea onChange = {(e)=>this.setState({p_lat: e.target.value})} value = {this.state.p_lat} placeholder = 'Lat'></textarea>
-                <textarea onChange = {(e)=>this.setState({p_lng: e.target.value})} value = {this.state.p_lng} placeholder = 'Lng'></textarea>
-                <button id='pr' onClick = {this.sendData}>send data</button>
-                <LHMapPresentation incidents = {this.state.incidents} center = {this.props.center} setLatLng = {this.setLatLng} fishinfo_cache = {this.state.fishinfo_cache} requestFishInfo_initial = {this.requestFishInfo_initial}/>
+                <div>
+                    <textarea onChange = {(e)=>this.setState({p_name: e.target.value})}  value = {this.state.p_name} placeholder = 'Name'></textarea>
+                    <textarea onChange = {(e)=>this.setState({p_lat: e.target.value})} value = {this.state.p_lat} placeholder = 'Lat'></textarea>
+                    <textarea onChange = {(e)=>this.setState({p_lng: e.target.value})} value = {this.state.p_lng} placeholder = 'Lng'></textarea>
+                    <textarea onChange = {(e)=>this.setState({p_description: e.target.value})} value = {this.state.p_description} placeholder = 'Description'></textarea>
+                    <button id='pr' onClick = {this.sendLocation}>send data</button>
+                </div>
+                <LHMapPresentation locations = {this.state.locations} locationfishlocal = {this.state.locationfishlocal} center = {this.props.center} setLatLng = {this.setLatLng} fishinfo_cache = {this.state.fishinfo_cache} requestFishInfo_initial = {this.requestFishInfo_initial}/>
             </div>
         )
     }
