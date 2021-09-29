@@ -1,0 +1,7 @@
+.PopupRc-main{
+    background-color: red;
+    cursor: pointer;
+}
+.PopupRc-main:hover{
+    background-color: blue
+}

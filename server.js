@@ -71,7 +71,7 @@ app.get('/AllLocations',(req, res) =>{
   db.close()
 })
 
-// FishLocal : {SpecieID, Size, Lat, lng}
+// FishLocal : {SpecieID, Size, LocationID, Date, Note}
 app.get('/FishLocal', (req, res) => {
   console.log('Get FishLocal')
   var db = new sqlite3.Database(path.join(__dirname, '/fish.db'))
@@ -99,7 +99,7 @@ app.post('/popo', (req, res) => {
   // *** update to the database
   var db = new sqlite3.Database(path.join(__dirname, '/fish.db'))
   db.serialize(function () {
-    db.run(`INSERT INTO FishLocal (Specie, Size, Lat, Lng) VALUES ('${req.body['Specie']}', '${req.body['Size']}', '${req.body['Lat']}', '${req.body['Lng']}');`)
+    db.run(`INSERT INTO FishLocal (SpecieID, Size, LocationID, Date, Note) VALUES ('${req.body['SpecieID']}', '${req.body['Size']}', '${req.body['LocationID']}', '${req.body['Date']}', '${req.body['Note']}');`)
   })
   db.close()
   res.send('Insertion of fishlocal completed successfully.')

@@ -1,6 +1,7 @@
 import React from 'react';
 import LHMapPresentation from './lhmappresentation/LHMapPresentation';
 import * as ic from'../util/InputCheckers'
+import * as api from'./LHMapAPI'
 
 import './LHMap.css'
 
@@ -79,7 +80,7 @@ export default class LHMap extends React.Component{
                         console.log('sage again!!',sage)
                         const t = JSON.parse(sage)
                         if(tlocationfishlocal[t['LocationID']])
-                            tlocationfishlocal[t['LocationID']].append(t)
+                            tlocationfishlocal[t['LocationID']].push(t)
                         else
                             tlocationfishlocal[t['LocationID']] = [t]
                     }
@@ -97,50 +98,46 @@ export default class LHMap extends React.Component{
         });
     }
     
-    async requestFishInfo (specie) {        
-        await fetch('http://localhost:3000/fishinfo', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    'Specie': specie
-                })
-            })
+    
+    
+    requestFishInfo_initial = (specie) => {
+        if(this.state.fishinfo_cache[specie])
+            return
+        api.requestFishInfo(specie)
             .then((v)=>v.text())
             .then(data => JSON.parse(data))
             .then(d => {
-                    console.log('ok',d , 'okend')
-                    var temp = this.state.fishinfo_cache
-                    temp[specie] = <div className="lhMapPopup-fishinfo">
-                        <img className = "lhMapPopup-fishpic" alt = 'Fish pic' src = {d['Iurl']}/>
-                        <div>{d['Name']}</div>
-                        <div>{d['Description']}</div>
-                    </div>
-                    this.setState({
-                        fishinfo_cache: temp
-                    })
-                    console.log(this.state.fishinfo_cache)
+                console.log('ok',d , 'okend')
+                var temp = this.state.fishinfo_cache
+                temp[specie] = <div className="lhMapPopup-fishinfo">
+                    <img className = "lhMapPopup-fishpic" alt = 'Fish pic' src = {d['Iurl']}/>
+                    <div>{d['Name']}</div>
+                    <div>{d['Description']}</div>
+                </div>
+                this.setState({
+                    fishinfo_cache: temp
+                })
+                console.log(this.state.fishinfo_cache)
             })
-
-      }
-    
-    requestFishInfo_initial = (specie) => {
-        this.requestFishInfo(specie)
     }
     
+    postNewFishLocal_initial = (specie_id, size, location_id, date, note) =>{
+        // {SpecieID, Size, LocationID, Date, Note}
+        this.postNewFishLocal(specie_id, size, location_id, date, note)
+    }
 
-    async postNewFishLocal(){
+    async postNewFishLocal(specie_id, size, location_id, date, note){
         await fetch('http://localhost:3000/popo', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    'Specie': this.state.p_specie,
-                    'Size': this.state.p_size,
-                    'Lat': this.state.p_lat,
-                    'Lng': this.state.p_lng  
+                    'SpecieID': specie_id,
+                    'Size': size,
+                    'LocationID': location_id,
+                    'Date': date,
+                    'Note': note
                 })
             })
             .then((v)=>v.text())
@@ -197,10 +194,11 @@ export default class LHMap extends React.Component{
             this.requestAllLocations()
         });
 
-        // this.socket.on('new fishlocal', (msg) => {
-        //     console.log(msg)
-        //     this.refreshAll()
-        // });
+        this.socket.on('new fishlocal', (msg) => {
+            console.log(msg)
+            this.requestAllFishlocals()
+        });
+        // this.postNewFishLocal_initial('1', '69', '1', '', '')
     }
 
     render() {
@@ -213,9 +211,9 @@ export default class LHMap extends React.Component{
                     <textarea onChange = {(e)=>this.setState({p_lat: e.target.value})} value = {this.state.p_lat} placeholder = 'Lat'></textarea>
                     <textarea onChange = {(e)=>this.setState({p_lng: e.target.value})} value = {this.state.p_lng} placeholder = 'Lng'></textarea>
                     <textarea onChange = {(e)=>this.setState({p_description: e.target.value})} value = {this.state.p_description} placeholder = 'Description'></textarea>
-                    <button id='pr' onClick = {this.sendLocation}>send data</button>
+                    <button onClick = {this.sendLocation}>send data</button>
                 </div>
-                <LHMapPresentation locations = {this.state.locations} locationfishlocal = {this.state.locationfishlocal} center = {this.props.center} setLatLng = {this.setLatLng} fishinfo_cache = {this.state.fishinfo_cache} requestFishInfo_initial = {this.requestFishInfo_initial}/>
+                <LHMapPresentation postNewFishLocal_initial = {this.postNewFishLocal_initial} locations = {this.state.locations} locationfishlocal = {this.state.locationfishlocal} center = {this.props.center} setLatLng = {this.setLatLng} fishinfo_cache = {this.state.fishinfo_cache} requestFishInfo_initial = {this.requestFishInfo_initial}/>
             </div>
         )
     }

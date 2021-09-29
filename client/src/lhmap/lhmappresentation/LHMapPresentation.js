@@ -29,7 +29,12 @@ export default class LHMapPresentation extends React.Component{
                             <Marker position={[v['Lat'], v['Lng']]}>
                                 <Popup>
                                     {/* <LHMapPopup v = {v} fishinfo_cache = {this.props.fishinfo_cache} requestFishInfo_initial = {this.props.requestFishInfo_initial}/> */}
-                                    <LHMapPopup locationfishlocal = {this.props.locationfishlocal[v['ID']]}/>
+                                    <LHMapPopup 
+                                        locationfishlocal = {this.props.locationfishlocal[v['ID']]} 
+                                        postNewFishLocal_initial = {this.props.postNewFishLocal_initial} 
+                                        id = {v['ID']}
+                                        requestFishInfo_initial = {this.props.requestFishInfo_initial}
+                                    />
                                 </Popup>
                             </Marker>)
                 }
@@ -51,10 +56,10 @@ export default class LHMapPresentation extends React.Component{
 
 function MyComponent(props) {
     const map = useMapEvents({
-        mousemove: (e) =>{
-            const { lat, lng } = e.latlng;
-            props.setTLatLng(lat+'',lng+'')
-        },
+        // mousemove: (e) =>{
+        //     const { lat, lng } = e.latlng;
+        //     props.setTLatLng(lat+'',lng+'')
+        // },
 
         click: (e) => {
             const { lat, lng } = e.latlng;
