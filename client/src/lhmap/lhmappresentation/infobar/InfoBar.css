@@ -1,0 +1,33 @@
+.InfoBar-main{
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 100000;
+    height: 100%;
+    transition: 0.5s;
+    width: fit-content;
+    display: flex;
+}
+
+.InfoBar-content{
+    background-color: red;
+    position: relative;
+    right: 0;
+    height: 100%;
+    transition: 0.5s;
+    width: 0vmin;
+    overflow: hidden;
+}
+.InfoBar-content-a{
+    width: 30vmin;
+}
+
+
+.InfoBar-clicker{
+    background-color: blue;
+    height: 20%;
+    width: 3vmin;
+    top: 35%;
+    position: relative;
+    border-radius: 0px 0px 0px 30px;
+}

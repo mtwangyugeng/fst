@@ -13,6 +13,8 @@ export default class LHMapPopup extends React.Component{
         p_size: '',
         p_date: '',
         p_note: '',
+
+        add_new: false
     }
 
     async componentDidMount(){
@@ -40,13 +42,18 @@ export default class LHMapPopup extends React.Component{
                         <PopupRc rc = {this.props.locationfishlocal[id]} requestFishInfo_initial = {this.props.requestFishInfo_initial}/>
                     )
                 }):''}
-                <div>
-                    <textarea onChange = {(e)=>this.setState({p_specieid: e.target.value})}  value = {this.state.p_specieid} placeholder = 'id'></textarea>
-                    <textarea onChange = {(e)=>this.setState({p_size: e.target.value})} value = {this.state.p_size} placeholder = 'size'></textarea>
-                    <textarea onChange = {(e)=>this.setState({p_date: e.target.value})} value = {this.state.p_date} placeholder = 'date'></textarea>
-                    <textarea onChange = {(e)=>this.setState({p_note: e.target.value})} value = {this.state.p_note} placeholder = 'note'></textarea>
-                    <button onClick = {this.sendFishlocal}>send data</button>
-                </div>
+
+                {this.state.add_new?
+                    <div className='lhMapPopup-newfishlocal'>
+                        <textarea onChange = {(e)=>this.setState({p_specieid: e.target.value})}  value = {this.state.p_specieid} placeholder = 'id'></textarea>
+                        <textarea onChange = {(e)=>this.setState({p_size: e.target.value})} value = {this.state.p_size} placeholder = 'size'></textarea>
+                        <textarea onChange = {(e)=>this.setState({p_date: e.target.value})} value = {this.state.p_date} placeholder = 'date'></textarea>
+                        <textarea onChange = {(e)=>this.setState({p_note: e.target.value})} value = {this.state.p_note} placeholder = 'note'></textarea>
+                        <button onClick = {this.sendFishlocal}>send data</button>
+                        <button onClick = {()=>{this.setState({add_new: false})}}>close</button>
+                    </div>
+                    :<button onClick = {()=>{this.setState({add_new: true})}}>Add new.</button>
+                }
             </div>
         )
     }

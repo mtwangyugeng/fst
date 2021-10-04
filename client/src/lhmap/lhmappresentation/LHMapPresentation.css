@@ -1,0 +1,7 @@
+.LHMapPresentation-latlng{
+    position: absolute;
+    z-index: 10000;
+    left:0;
+    bottom:0;
+    background-color: rgb(221, 219, 219);
+}

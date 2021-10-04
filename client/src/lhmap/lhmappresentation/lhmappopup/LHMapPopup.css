@@ -1,7 +1,6 @@
 .lhMapPopup-main{
     background-color: rgb(200, 200, 243);
-    width: 200px;
-    height: 170px;
+    width: 30vmin;
     overflow: auto;
     
 }
@@ -11,4 +10,10 @@
     width: 100%;
     height: 70%;
     object-fit: cover;
+}
+
+.lhMapPopup-newfishlocal{
+    background-color: yellow;
+    display: flex;
+    flex-direction: column;
 }

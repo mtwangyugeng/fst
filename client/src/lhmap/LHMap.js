@@ -5,7 +5,11 @@ import * as api from'./LHMapAPI'
 
 import './LHMap.css'
 
+import InfoBar from './lhmappresentation/infobar/InfoBar';
+
 import socketIOClient from "socket.io-client";
+
+import LHMapPopup from './lhmappresentation/lhmappopup/LHMapPopup';
 
 export default class LHMap extends React.Component{
     ENDPOINT = "http://127.0.0.1:4001";
@@ -24,7 +28,12 @@ export default class LHMap extends React.Component{
         fishinfo_cache: {},
         locations_cache:{},
 
-        locationfishlocal:{}
+        locationfishlocal:{},
+
+        //info bar
+        active:false,
+        active_id: null,
+        content: <></>
       }
 
       
@@ -213,7 +222,10 @@ export default class LHMap extends React.Component{
                     <textarea onChange = {(e)=>this.setState({p_description: e.target.value})} value = {this.state.p_description} placeholder = 'Description'></textarea>
                     <button onClick = {this.sendLocation}>send data</button>
                 </div>
-                <LHMapPresentation postNewFishLocal_initial = {this.postNewFishLocal_initial} locations = {this.state.locations} locationfishlocal = {this.state.locationfishlocal} center = {this.props.center} setLatLng = {this.setLatLng} fishinfo_cache = {this.state.fishinfo_cache} requestFishInfo_initial = {this.requestFishInfo_initial}/>
+                <div className="LHMap-rep">
+                    <LHMapPresentation p_lat = {this.state.p_lat} p_lng = {this.state.p_lng} clickedMarker = {this.clickedMarker} postNewFishLocal_initial = {this.postNewFishLocal_initial} locations = {this.state.locations}  center = {this.props.center} setLatLng = {this.setLatLng} fishinfo_cache = {this.state.fishinfo_cache} />
+                    <InfoBar requestFishInfo_initial = {this.requestFishInfo_initial} postNewFishLocal_initial = {this.postNewFishLocal_initial} locationfishlocal = {this.state.locationfishlocal} active = {this.state.active} clickered = {this.clickered} active_id = {this.state.active_id} content = {this.state.content}/>
+                </div>
             </div>
         )
     }
@@ -223,5 +235,34 @@ export default class LHMap extends React.Component{
             p_lat: lat,
             p_lng: lng
         })
+    }
+
+    clickered = () => {
+        this.setState({active: !this.state.active})
+        // console.log('clickered')
+    }
+
+    clickedMarker = (id) => {
+        // this.clickered()
+        if(id === this.state.active_id && this.state.active){
+            this.setState(
+                {
+                    active: false,
+                }
+            )
+        }else{
+            this.setState(
+                {
+                    active: true,
+                    active_id: id,
+                    // content: <LHMapPopup 
+                    //     locationfishlocal = {this.state.locationfishlocal[id]} 
+                    //     postNewFishLocal_initial = {this.postNewFishLocal_initial} 
+                    //     id = {id}
+                    //     requestFishInfo_initial = {this.requestFishInfo_initial}
+                    // />
+                }
+            )
+        }
     }
 }
