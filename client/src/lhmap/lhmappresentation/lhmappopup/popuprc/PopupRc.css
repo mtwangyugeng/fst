@@ -1,6 +1,9 @@
 .PopupRc-main{
     background-color: red;
     cursor: pointer;
+    height: fit-content;
+    white-space: initial;
+    word-wrap: break-word
 }
 .PopupRc-main:hover{
     background-color: blue

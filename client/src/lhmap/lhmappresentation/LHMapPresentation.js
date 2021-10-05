@@ -33,14 +33,6 @@ export default class LHMapPresentation extends React.Component{
                                   this.clickedMarker(id)
                                 },
                               }}>
-                                {/* <Popup>
-                                    <LHMapPopup 
-                                        locationfishlocal = {this.props.locationfishlocal[v['ID']]} 
-                                        postNewFishLocal_initial = {this.props.postNewFishLocal_initial} 
-                                        id = {v['ID']}
-                                        requestFishInfo_initial = {this.props.requestFishInfo_initial}
-                                    />
-                                </Popup> */}
                             </Marker>
                             )
                 }
@@ -52,7 +44,7 @@ export default class LHMapPresentation extends React.Component{
             />
             </MapContainer>
             <div className="LHMapPresentation-latlng">
-                {this.state.tlat + ' ,' + this.state.tlng}
+                {'Lat: ' + this.state.tlat + ', ' + 'Lng:' + this.state.tlng}
             </div>
             </>
         )
@@ -60,12 +52,7 @@ export default class LHMapPresentation extends React.Component{
 
     clickedMarker = (id) => {
         console.log('clickedMarker', id)
-        this.props.clickedMarker(id)
-        // if currently opened marker == id
-        //  then close the side tab
-        //else
-        //  open side tab show info of opened marker
-        
+        this.props.clickedMarker(id)        
     }
 
     setTLatLng = (lat,lng) =>{

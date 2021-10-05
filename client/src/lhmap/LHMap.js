@@ -110,9 +110,7 @@ export default class LHMap extends React.Component{
     
     
     requestFishInfo_initial = (specie) => {
-        if(this.state.fishinfo_cache[specie])
-            return
-        api.requestFishInfo(specie)
+        return api.requestFishInfo(specie)
             .then((v)=>v.text())
             .then(data => JSON.parse(data))
             .then(d => {
@@ -127,7 +125,9 @@ export default class LHMap extends React.Component{
                     fishinfo_cache: temp
                 })
                 console.log(this.state.fishinfo_cache)
+                return this.state.fishinfo_cache[specie]
             })
+            
     }
     
     postNewFishLocal_initial = (specie_id, size, location_id, date, note) =>{
@@ -207,7 +207,6 @@ export default class LHMap extends React.Component{
             console.log(msg)
             this.requestAllFishlocals()
         });
-        // this.postNewFishLocal_initial('1', '69', '1', '', '')
     }
 
     render() {
@@ -224,7 +223,7 @@ export default class LHMap extends React.Component{
                 </div>
                 <div className="LHMap-rep">
                     <LHMapPresentation p_lat = {this.state.p_lat} p_lng = {this.state.p_lng} clickedMarker = {this.clickedMarker} postNewFishLocal_initial = {this.postNewFishLocal_initial} locations = {this.state.locations}  center = {this.props.center} setLatLng = {this.setLatLng} fishinfo_cache = {this.state.fishinfo_cache} />
-                    <InfoBar requestFishInfo_initial = {this.requestFishInfo_initial} postNewFishLocal_initial = {this.postNewFishLocal_initial} locationfishlocal = {this.state.locationfishlocal} active = {this.state.active} clickered = {this.clickered} active_id = {this.state.active_id} content = {this.state.content}/>
+                    <InfoBar fishinfo_cache = {this.state.fishinfo_cache} locations = {this.state.locations} requestFishInfo_initial = {this.requestFishInfo_initial} postNewFishLocal_initial = {this.postNewFishLocal_initial} locationfishlocal = {this.state.locationfishlocal} active = {this.state.active} clickered = {this.clickered} active_id = {this.state.active_id} content = {this.state.content}/>
                 </div>
             </div>
         )
@@ -243,7 +242,6 @@ export default class LHMap extends React.Component{
     }
 
     clickedMarker = (id) => {
-        // this.clickered()
         if(id === this.state.active_id && this.state.active){
             this.setState(
                 {

@@ -37,11 +37,13 @@ export default class LHMapPopup extends React.Component{
                 <div>Size: {this.props.v['Size']} cm</div>
                 <div>[Lat, lng]: [{this.props.v['Lat']}, {this.props.v['Lng']}] </div>
                 {this.props.fishinfo_cache[this.props.v['Specie']]} */}
-                {this.props.locationfishlocal? Object.keys(this.props.locationfishlocal).map(id =>{
-                    return(
-                        <PopupRc rc = {this.props.locationfishlocal[id]} requestFishInfo_initial = {this.props.requestFishInfo_initial}/>
-                    )
-                }):''}
+                {this.props.locationfishlocal? Object.keys(this.props.locationfishlocal).map(
+                    id =>{
+                        return(
+                            <PopupRc fishinfo_cache = {this.props.fishinfo_cache} rc = {this.props.locationfishlocal[id]} requestFishInfo_initial = {this.props.requestFishInfo_initial}/>
+                        )
+                    }
+                ):''}
 
                 {this.state.add_new?
                     <div className='lhMapPopup-newfishlocal'>
@@ -52,7 +54,7 @@ export default class LHMapPopup extends React.Component{
                         <button onClick = {this.sendFishlocal}>send data</button>
                         <button onClick = {()=>{this.setState({add_new: false})}}>close</button>
                     </div>
-                    :<button onClick = {()=>{this.setState({add_new: true})}}>Add new.</button>
+                    :( this.props.id? <button onClick = {()=>{this.setState({add_new: true})}}>Add new.</button>: '')
                 }
             </div>
         )
