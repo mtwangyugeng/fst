@@ -26,7 +26,7 @@ export default class InfoBar extends React.Component{
                                 <div>{this.props.locations[this.props.active_id]['Description']}</div>
                             </div>
                         )
-                        :''}
+                        :'N/A'}
                     {/* {this.props.content} */}
                     <LHMapPopup 
                         fishinfo_cache = {this.props.fishinfo_cache}

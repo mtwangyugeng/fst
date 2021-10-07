@@ -9,8 +9,6 @@ import InfoBar from './lhmappresentation/infobar/InfoBar';
 
 import socketIOClient from "socket.io-client";
 
-import LHMapPopup from './lhmappresentation/lhmappopup/LHMapPopup';
-
 export default class LHMap extends React.Component{
     ENDPOINT = "http://127.0.0.1:4001";
     socket = socketIOClient(this.ENDPOINT);
@@ -39,22 +37,10 @@ export default class LHMap extends React.Component{
       
 
     async requestAllLocations(){
-        console.log('getting localtion Data')
-        
-        await fetch('http://localhost:3000/AllLocations').then((v) => {
-            if(v.ok){
-                return v
-            }else {
-                throw new Error('no response from server');
-            }
-            }).then((v)=>v.text())
+        api.requestAllLocations()
+            .then((v)=>v.text())
             .then(data => {
                 var temp = data.split('|')
-                /*usage
-                locations_cache[id] => html of location data
-                locations[id] => raw data 
-                locationfishlocal[id] => list of fishlocals
-                */
                var tlocation = {}
                 temp.forEach(sage => {
                     if(sage !== ''){
@@ -74,13 +60,8 @@ export default class LHMap extends React.Component{
     }
 
     async requestAllFishlocals(){
-        await fetch('http://localhost:3000/FishLocal').then((v) => {
-            if(v.ok){
-                return v
-            }else {
-                throw new Error('no response from server');
-            }
-            }).then((v)=>v.text())
+        api.requestAllFishlocals()
+            .then((v)=>v.text())
             .then(data => {
                 const temp = data.split('|')
                 var tlocationfishlocal = {}
@@ -136,37 +117,13 @@ export default class LHMap extends React.Component{
     }
 
     async postNewFishLocal(specie_id, size, location_id, date, note){
-        await fetch('http://localhost:3000/popo', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    'SpecieID': specie_id,
-                    'Size': size,
-                    'LocationID': location_id,
-                    'Date': date,
-                    'Note': note
-                })
-            })
+        api.postNewFishLocal(specie_id, size, location_id, date, note)
             .then((v)=>v.text())
             .then(data => this.socket.emit('new fishlocal', 'need refresh'))
       }
 
-    async postNewLocation(){
-        console.log('postNewLocation: good')
-        await fetch('http://localhost:3000/postNewLocation', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    'Name': this.state.p_name,
-                    'Lat': this.state.p_lat,
-                    'Lng': this.state.p_lng,
-                    'Description': this.state.p_description
-                })
-            })
+    async postNewLocation(name, lat, lng, description){
+        api.postNewLocation(name, lat, lng, description)
             .then((v)=>v.text())
             .then(data => this.socket.emit('new location', 'need refresh'))
     }
@@ -175,7 +132,7 @@ export default class LHMap extends React.Component{
         try{
             ic.isLat(this.state.p_lat)
             ic.isLng(this.state.p_lng)
-            this.postNewLocation()
+            this.postNewLocation(this.state.p_name, this.state.p_lat,this.state.p_lng,this.state.p_description)
             this.setState({
                 p_name: '',
                 p_lat: '',
