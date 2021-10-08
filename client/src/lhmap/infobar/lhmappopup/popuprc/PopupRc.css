@@ -1,0 +1,12 @@
+.PopupRc-main{
+    background-color: rgb(247, 217, 217);
+    cursor: pointer;
+    height: fit-content;
+    white-space: initial;
+    word-wrap: break-word;
+    transition: 0.5s;
+    border-bottom: 1px solid rgb(121, 121, 121);
+}
+.PopupRc-main:hover{
+    background-color: rgb(134, 134, 240)
+}

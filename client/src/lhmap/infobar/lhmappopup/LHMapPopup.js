@@ -4,6 +4,7 @@ import './LHMapPopup.css';
 import { Tooltip} from 'react-leaflet'
 import PopupRc from './popuprc/PopupRc'
 
+import {isHours, isMonthDayYear} from '../../../util/InputCheckers'
 export default class LHMapPopup extends React.Component{
     /**
      * popup show all fishes caught in such location
@@ -11,7 +12,13 @@ export default class LHMapPopup extends React.Component{
     state = {
         p_specieid: '',
         p_size: '',
-        p_date: '',
+
+        p_hh: '',
+        p_min: '',
+        p_mm: '',
+        p_dd: '',
+        p_yy: '',
+
         p_note: '',
 
         add_new: false
@@ -30,13 +37,6 @@ export default class LHMapPopup extends React.Component{
     render() {
         return (
             <div className="lhMapPopup-main">
-                {/* <Tooltip direction="right" offset={[0, 20]} opacity={1} permanent>
-                    [{this.props.v['Lat']}, {this.props.v['Lng']}]
-                </Tooltip> */}
-                {/* <div>Fish ID: {this.props.v['Specie']} </div>
-                <div>Size: {this.props.v['Size']} cm</div>
-                <div>[Lat, lng]: [{this.props.v['Lat']}, {this.props.v['Lng']}] </div>
-                {this.props.fishinfo_cache[this.props.v['Specie']]} */}
                 {this.props.locationfishlocal? Object.keys(this.props.locationfishlocal).map(
                     id =>{
                         return(
@@ -47,9 +47,14 @@ export default class LHMapPopup extends React.Component{
 
                 {this.state.add_new?
                     <div className='lhMapPopup-newfishlocal'>
-                        <textarea onChange = {(e)=>this.setState({p_specieid: e.target.value})}  value = {this.state.p_specieid} placeholder = 'id'></textarea>
+                        <textarea onChange = {(e)=>this.setState({p_specieid: e.target.value})}  value = {this.state.p_specieid} placeholder = 'specie id'></textarea>
                         <textarea onChange = {(e)=>this.setState({p_size: e.target.value})} value = {this.state.p_size} placeholder = 'size'></textarea>
-                        <textarea onChange = {(e)=>this.setState({p_date: e.target.value})} value = {this.state.p_date} placeholder = 'date'></textarea>
+                        <div className = 'lhMapPopup-date'>
+                            <textarea className = 'lhMapPopup-imp' onChange = {(e)=>this.setState({p_hh: e.target.value})} value = {this.state.p_hh} placeholder = 'hh'></textarea>&nbsp;;&nbsp;
+                            <textarea className = 'lhMapPopup-imp' onChange = {(e)=>this.setState({p_mm: e.target.value})} value = {this.state.p_mm} placeholder = 'mm'></textarea>&nbsp;/&nbsp;
+                            <textarea className = 'lhMapPopup-imp' onChange = {(e)=>this.setState({p_dd: e.target.value})} value = {this.state.p_dd} placeholder = 'dd'></textarea>&nbsp;/&nbsp;
+                            <textarea className = 'lhMapPopup-imp' onChange = {(e)=>this.setState({p_yy: e.target.value})} value = {this.state.p_yy} placeholder = 'yy'></textarea>
+                        </div>
                         <textarea onChange = {(e)=>this.setState({p_note: e.target.value})} value = {this.state.p_note} placeholder = 'note'></textarea>
                         <button onClick = {this.sendFishlocal}>send data</button>
                         <button onClick = {()=>{this.setState({add_new: false})}}>close</button>
@@ -61,13 +66,25 @@ export default class LHMapPopup extends React.Component{
     }
 
     sendFishlocal = () => {
-        this.props.postNewFishLocal_initial(this.state.p_specieid, this.state.p_size, this.props.id, this.state.p_date, this.state.p_note)
-        this.setState({
-            p_specieid: '',
-            p_size: '',
-            p_date: '',
-            p_note: '',
-        })
+        try{
+            isHours(this.state.p_hh )
+            isMonthDayYear(this.state.p_mm, this.state.p_dd, this.state.p_yy)
+            const date = this.state.p_hh + ';' + this.state.p_mm + '/' + this.state.p_dd + '/' + this.state.p_yy
+            if (this.props.postNewFishLocal_initial(this.state.p_specieid, this.state.p_size, this.props.id, date, this.state.p_note))
+                this.setState({
+                    p_specieid: '',
+                    p_size: '',
+                    
+                    p_min: '',
+                    p_mm: '',
+                    p_dd: '',
+                    p_yy: '',
+
+                    p_note: '',
+                })
+        }catch(e){
+            console.log(e)
+        }
     }
 
 }

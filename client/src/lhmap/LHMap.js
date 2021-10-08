@@ -5,7 +5,7 @@ import * as api from'./LHMapAPI'
 
 import './LHMap.css'
 
-import InfoBar from './lhmappresentation/infobar/InfoBar';
+import InfoBar from './infobar/InfoBar';
 
 import socketIOClient from "socket.io-client";
 
@@ -16,7 +16,6 @@ export default class LHMap extends React.Component{
     state = {
         mystate: 'Waiting for the Server',
         locations: [],
-        fishlocals: [],
 
         p_name: '',
         p_lat: '',
@@ -31,7 +30,6 @@ export default class LHMap extends React.Component{
         //info bar
         active:false,
         active_id: null,
-        content: <></>
       }
 
       
@@ -77,7 +75,6 @@ export default class LHMap extends React.Component{
                 });
                 console.log('tlocationfishlocal', tlocationfishlocal)
                 this.setState({
-                    fishlocals: data.split('|'),
                     locationfishlocal: tlocationfishlocal,
                     mystate: 'Loaded table FishLocal'
                 })
@@ -113,7 +110,19 @@ export default class LHMap extends React.Component{
     
     postNewFishLocal_initial = (specie_id, size, location_id, date, note) =>{
         // {SpecieID, Size, LocationID, Date, Note}
-        this.postNewFishLocal(specie_id, size, location_id, date, note)
+        try{
+            ic.isSpecie(specie_id)
+            ic.isSize(size)
+            this.postNewFishLocal(specie_id, size, location_id, date, note)
+            return true
+        }catch(e){
+            if(typeof e === 'string')
+                this.setState({mystate: e})
+            else
+                console.log(e)
+            return false
+        }
+        
     }
 
     async postNewFishLocal(specie_id, size, location_id, date, note){
@@ -171,7 +180,7 @@ export default class LHMap extends React.Component{
             <div className="LHMap-main">
                 {this.state.mystate}
                 <br/>
-                <div>
+                <div className="LHMap-topbar">
                     <textarea onChange = {(e)=>this.setState({p_name: e.target.value})}  value = {this.state.p_name} placeholder = 'Name'></textarea>
                     <textarea onChange = {(e)=>this.setState({p_lat: e.target.value})} value = {this.state.p_lat} placeholder = 'Lat'></textarea>
                     <textarea onChange = {(e)=>this.setState({p_lng: e.target.value})} value = {this.state.p_lng} placeholder = 'Lng'></textarea>
@@ -180,7 +189,7 @@ export default class LHMap extends React.Component{
                 </div>
                 <div className="LHMap-rep">
                     <LHMapPresentation p_lat = {this.state.p_lat} p_lng = {this.state.p_lng} clickedMarker = {this.clickedMarker} postNewFishLocal_initial = {this.postNewFishLocal_initial} locations = {this.state.locations}  center = {this.props.center} setLatLng = {this.setLatLng} fishinfo_cache = {this.state.fishinfo_cache} />
-                    <InfoBar fishinfo_cache = {this.state.fishinfo_cache} locations = {this.state.locations} requestFishInfo_initial = {this.requestFishInfo_initial} postNewFishLocal_initial = {this.postNewFishLocal_initial} locationfishlocal = {this.state.locationfishlocal} active = {this.state.active} clickered = {this.clickered} active_id = {this.state.active_id} content = {this.state.content}/>
+                    <InfoBar fishinfo_cache = {this.state.fishinfo_cache} locations = {this.state.locations} requestFishInfo_initial = {this.requestFishInfo_initial} postNewFishLocal_initial = {this.postNewFishLocal_initial} locationfishlocal = {this.state.locationfishlocal} active = {this.state.active} clickered = {this.clickered} active_id = {this.state.active_id} />
                 </div>
             </div>
         )
@@ -210,12 +219,6 @@ export default class LHMap extends React.Component{
                 {
                     active: true,
                     active_id: id,
-                    // content: <LHMapPopup 
-                    //     locationfishlocal = {this.state.locationfishlocal[id]} 
-                    //     postNewFishLocal_initial = {this.postNewFishLocal_initial} 
-                    //     id = {id}
-                    //     requestFishInfo_initial = {this.requestFishInfo_initial}
-                    // />
                 }
             )
         }

@@ -1,7 +1,7 @@
 import './InfoBar.css'
 
 import React from 'react';
-import LHMapPopup from '../lhmappopup/LHMapPopup';
+import LHMapPopup from './lhmappopup/LHMapPopup';
 
 export default class InfoBar extends React.Component{
 
@@ -12,8 +12,6 @@ export default class InfoBar extends React.Component{
                     {this.props.active?'>':'<'}
                 </div>
                 <div className= {"InfoBar-content "+ (this.props.active?'InfoBar-content-a':'')}>
-                    {/*contents go here*/}
-                        {/* {JSON.stringify(this.props.locations[this.props.active_id])} */}
                         {this.props.active_id? (
                             <div className= {"InfoBar-hood"}>
                                 <div style={{display:'flex'}}>
@@ -27,7 +25,6 @@ export default class InfoBar extends React.Component{
                             </div>
                         )
                         :'N/A'}
-                    {/* {this.props.content} */}
                     <LHMapPopup 
                         fishinfo_cache = {this.props.fishinfo_cache}
                         locationfishlocal = {this.props.locationfishlocal[this.props.active_id]} 

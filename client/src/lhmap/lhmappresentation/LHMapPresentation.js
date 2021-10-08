@@ -1,7 +1,6 @@
 import React from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, CircleMarker  } from 'react-leaflet'
 
-import LHMapPopup from './lhmappopup/LHMapPopup'
 import './LHMapPresentation.css'
 
 export default class LHMapPresentation extends React.Component{

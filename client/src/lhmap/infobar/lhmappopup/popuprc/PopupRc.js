@@ -7,9 +7,7 @@ export default class PopupRc extends React.Component{
         fishi: 'error',
         activated: false,
     }
-
-    async componentDidMount(){
-    }
+    rc = this.props.rc
 
     clicked = () => {
         if (this.state.activated){
@@ -29,18 +27,27 @@ export default class PopupRc extends React.Component{
         }
     }
 
+    componentDidMount(){
+        // const rc = this.props.rc
+        console.log('rc: ', this.rc)
+
+    }
+
     render() {
         return (
             <>
                 <div className="PopupRc-main" onClick={this.clicked}>
-                    RC
-                    {JSON.stringify(this.props.rc)}
+                    {/* {JSON.stringify(this.props.rc)} */}
+                    Specie: {this.rc.SpecieID} ;
+                    Size: {this.rc.Size} cm;
+                    Date: {this.rc.Date};
+                    Note: {this.rc.Note};
 
                 </div>
                 {
                     this.state.activated?
                     <>
-                    {this.state.fishi}
+                        {this.state.fishi}
                     </>:''
                 }
             </>

@@ -10,3 +10,9 @@
     height: 90%;
     position: relative;
 }
+
+.LHMap-topbar{
+    /* background-color: yellow; */
+    display: flex;
+    justify-content: center;
+}
