@@ -26,6 +26,7 @@ export default class InfoBar extends React.Component{
                         )
                         :'N/A'}
                     <LHMapPopup 
+                        setMyState = {this.props.setMyState}
                         fishinfo_cache = {this.props.fishinfo_cache}
                         locationfishlocal = {this.props.locationfishlocal[this.props.active_id]} 
                         postNewFishLocal_initial = {this.props.postNewFishLocal_initial} 

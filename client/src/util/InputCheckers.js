@@ -51,11 +51,12 @@ export function isHours(imp) {
 export function isMonthDayYear(imp_mm, imp_dd, imp_yy) { 
     const temp_mm = isInt(imp_mm, 'Month(mm)')
     
-    const temp_dd = isInt(imp_dd, 'Day(dd)')
-    const temp_yy = isInt(imp_yy, 'year(yy)')
+
     if (temp_mm < 1 || temp_mm > 12)
         throw 'Month must be between 1 to 12'
-
+    
+    const temp_dd = isInt(imp_dd, 'Day(dd)')
+    const temp_yy = isInt(imp_yy, 'year(yy)')
     var ld = 30
     if(temp_dd === 2){
         if(temp_yy%4 === 0)
@@ -66,5 +67,5 @@ export function isMonthDayYear(imp_mm, imp_dd, imp_yy) {
         ld = 31
     }
     if (temp_dd < 1 || temp_dd > ld)
-        throw `Month not in range[1, ${ld}]`
+        throw `day not in range[1, ${ld}]`
 }

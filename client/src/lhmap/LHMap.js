@@ -31,7 +31,10 @@ export default class LHMap extends React.Component{
         active:false,
         active_id: null,
       }
-
+    
+    setMyState = (imp)=>{
+        this.setState({mystate:imp})
+    }
       
 
     async requestAllLocations(){
@@ -189,7 +192,7 @@ export default class LHMap extends React.Component{
                 </div>
                 <div className="LHMap-rep">
                     <LHMapPresentation p_lat = {this.state.p_lat} p_lng = {this.state.p_lng} clickedMarker = {this.clickedMarker} postNewFishLocal_initial = {this.postNewFishLocal_initial} locations = {this.state.locations}  center = {this.props.center} setLatLng = {this.setLatLng} fishinfo_cache = {this.state.fishinfo_cache} />
-                    <InfoBar fishinfo_cache = {this.state.fishinfo_cache} locations = {this.state.locations} requestFishInfo_initial = {this.requestFishInfo_initial} postNewFishLocal_initial = {this.postNewFishLocal_initial} locationfishlocal = {this.state.locationfishlocal} active = {this.state.active} clickered = {this.clickered} active_id = {this.state.active_id} />
+                    <InfoBar setMyState = {this.setMyState} fishinfo_cache = {this.state.fishinfo_cache} locations = {this.state.locations} requestFishInfo_initial = {this.requestFishInfo_initial} postNewFishLocal_initial = {this.postNewFishLocal_initial} locationfishlocal = {this.state.locationfishlocal} active = {this.state.active} clickered = {this.clickered} active_id = {this.state.active_id} />
                 </div>
             </div>
         )

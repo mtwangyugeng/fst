@@ -84,6 +84,8 @@ export default class LHMapPopup extends React.Component{
                 })
         }catch(e){
             console.log(e)
+            if(typeof e === 'string')
+                this.props.setMyState(e)
         }
     }
 
